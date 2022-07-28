@@ -53,7 +53,8 @@ public class DisjointSets {
 
         return result.toString();
     }
-
+    
+    // test client
     public static void main(String[] args) {
         DisjointSets ds = new DisjointSets(30);
 //        System.out.println(ds);
