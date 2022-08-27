@@ -1,68 +1,74 @@
 public class DisjointSets {
-    private int n; // number of elements across all sets
-    private int[] parent, size; // records tree sizes and element parents
+    private int[] id; // tracks parents of each node
+    private int[] sz; // tracks tree size
+    private int count; // tracks num of trees (sets)
 
-    // creating n singleton sets, each with size of 1
     public DisjointSets(int n) {
-        this.n = n;
-        parent = new int[n];
-        size = new int[n];
+        id = new int[n];
+        sz = new int[n];
+        count = n;
 
         for (int i = 0; i < n; i++) {
-            parent[i] = i;
-            size[i] = 1;
+            id[i] = i; // n singleton sets
+            sz[i] = 1; // each set has size of 1
+
         }
-
     }
 
-    // gives size of set that element resides in
-    private int getSize(int e) {
-        return size[find(e)];
-    }
-
-    // traverses up to the identifier of the set (root of the tree)
-    public int find(int p) {
-        while (p != parent[p]) p = parent[p];
-        return p;
-    }
-
-    // unites two sets given two elements
     public void union(int p, int q) {
         int rootP = find(p);
         int rootQ = find(q);
 
-        if (rootP == rootQ) return;
-
-        if (size[rootP] > size[rootQ]) {
-            parent[rootQ] = parent[rootP];
-            size[rootP] += size[rootQ];
+        if (sz[rootP] < sz[rootQ]) {
+            id[rootP] = rootQ;
+            sz[rootQ] += sz[rootP];
         } else {
-
-            parent[rootP] = parent[rootQ];
-            size[rootQ] += size[rootP];
+            id[rootQ] = id[rootP];
+            sz[rootP] += sz[rootQ];
         }
+        count--;
     }
 
-    // displays element, its set identifier, and tree size
-    public String toString() {
-        StringBuilder result = new StringBuilder();
+    public int find(int p) {
+        int x = p; // traveler
+        while (id[x] != x) x = id[x]; // x will become the root
 
-        for (int i = 0; i < n; i++) {
-            result.append("element: " + i + " root: " + find(i) + " size: " + getSize(i) + "\n");
+        while (id[p] != p) { // path compression
+            int parent = id[p];
+            id[p] = x;
+            p = parent;
         }
 
-        return result.toString();
+        return p;
     }
-    
-    // test client
+
+    public boolean connected(int p, int q) {
+        return find(p) == find(q);
+    }
+
+    public int count() {
+        return count;
+    }
+
+//    // for debugging
+//    public void printIds() {
+//        for (int i = 0; i < id.length; i++)
+//            System.out.printf("Node %d's parent is %d%n", i, id[i]);
+//    }
+
     public static void main(String[] args) {
-        DisjointSets ds = new DisjointSets(30);
-//        System.out.println(ds);
-        ds.union(4, 9);
-        ds.union(9, 12);
-        ds.union(28, 1);
-        ds.union(1, 3);
-        System.out.println(ds);
+        DisjointSets ds = new DisjointSets(Integer.parseInt(args[0]));
+
+        ds.union(0, 3);
+        if (ds.connected(0, 3))
+            System.out.println("0 and 3 are now connected");
+        ds.union(8, 9);
+        ds.union(9, 3);
+        ds.union(7, 3);
+
+        System.out.printf("There are %d trees (sets)%n", ds.count());
+        System.out.printf("Root of node 9 is: %d%n", ds.find(9));
+
+//        ds.printIds();
     }
 }
-
