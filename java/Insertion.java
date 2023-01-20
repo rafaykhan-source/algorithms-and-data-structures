@@ -1,4 +1,14 @@
-public class Selection {
+package java;
+public class Insertion {
+
+    public static void sort(Comparable[] a) {
+        int n = a.length; // array length
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j > 0 && less(a[j], a[j - 1]); j--) {
+                exch(a, j, j - 1);
+            }
+        }
+    }
 
     private static boolean less(Comparable v, Comparable w) {
         return v.compareTo(w) < 0;
@@ -10,24 +20,14 @@ public class Selection {
         a[j] = t;
     }
 
-    public static void sort(Comparable[] a) {
-        for (int i = 0; i < a.length; i++) {
-            int min = i;
-            for (int j = i + 1; j < a.length; j++)
-                if (less(a[j], a[min])) min = j;
-            exch(a, i, min);
-        }
-    }
-
     public static void show(Comparable[] a) {
         for (int i = 0; i < a.length; i++) System.out.println(a[i]);
     }
 
     public static void main(String[] args) {
-        String[] a = {"Banana", "Apple", "Cat", "Uwu"};
+        String[] a = {"Uwu", "Banana", "Apple", "Cat"};
 
         sort(a);
         show(a);
-
     }
 }

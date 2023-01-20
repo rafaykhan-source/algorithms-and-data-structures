@@ -1,3 +1,4 @@
+package java;
 public class DisjointSets {
     private int[] id; // tracks parents of each node
     private int[] sz; // tracks tree size
